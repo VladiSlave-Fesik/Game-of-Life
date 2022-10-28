@@ -57,49 +57,50 @@ class Cell:
         self.ls = []
 
         try:
-            self.up = True if d.get(str(self.pos-10)) else False
+            # print('da', self.pos,d.get(str(self.pos - 10)).pos)
+            self.up = True if d.get(str(self.pos - 10)).stat == 1 else False
             if self.up is True:
                 self.ls.append(self.up)
         except:
             pass
         try:
-            self.down = True if d.get(str(self.pos + 10)) else False
+            self.down = True if d.get(str(self.pos + 10)).stat == 1 else False
             if self.down is True:
                 self.ls.append(self.down)
         except:
             pass
         try:
-            self.left = True if d.get(str(self.pos - 1)) else False
+            self.left = True if d.get(str(self.pos - 1)).stat == 1 else False
             if self.left is True:
                 self.ls.append(self.left)
         except:
             pass
         try:
-            self.right = True if d.get(str(self.pos + 1)) else False
+            self.right = True if d.get(str(self.pos + 1)).stat == 1 else False
             if self.right is True:
                 self.ls.append(self.right)
         except:
             pass
         try:
-            self.up_left = True if d.get(str(self.pos - 11)) else False
+            self.up_left = True if d.get(str(self.pos - 11)).stat == 1 else False
             if self.up_left is True:
                 self.ls.append(self.up_left)
         except:
             pass
         try:
-            self.down_left = True if d.get(str(self.pos + 9)) else False
+            self.down_left = True if d.get(str(self.pos + 9)).stat == 1 else False
             if self.down_left is True:
                 self.ls.append(self.down_left)
         except:
             pass
         try:
-            self.up_right = True if d.get(str(self.pos - 9)) else False
+            self.up_right = True if d.get(str(self.pos - 9)).stat == 1 else False
             if self.up_right is True:
                 self.ls.append(self.up_right)
         except:
             pass
         try:
-            self.down_right = True if d.get(str(self.pos + 11)) else False
+            self.down_right = True if d.get(str(self.pos + 11)).stat == 1 else False
             if self.down_right is True:
                 self.ls.append(self.down_right)
         except:
@@ -110,14 +111,14 @@ class Cell:
             if self.stat == 0:
                 if len(self.ls) == 3:
                     self.change_stat()
-                    print('da')
 
             elif self.stat == 1:
                 if len(self.ls) in (2,3):
                     pass
                 elif len(self.ls) > 3 or len(self.ls) < 2:
                     self.change_stat()
-                    print('net')
+
+
 
 
 def new_gen(d):
@@ -181,18 +182,13 @@ def main(d):
     new_gen(d)
     current_generation += 1
 
-# if __name__ == '__main__':
-#     generate_initial_table(30)
-#     d = create_dict_num_cell()
-#     for i in range(1):
-#         if table_inf().get('dead_cells') == 0:
-#             break
-#         main()
-#         sleep(0.3)
-#         clear()
+if __name__ == '__main__':
+    generate_initial_table(30)
+    d = create_dict_num_cell()
+    while True:
+        if table_inf().get('dead_cells') == 0:
+            break
+        main(d)
+        sleep(0.3)
+        clear()
 
-generate_initial_table(50)
-d = create_dict_num_cell()
-main(d)
-
-main(d)
