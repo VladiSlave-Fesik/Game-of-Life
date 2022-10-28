@@ -1,11 +1,5 @@
-sq_null = '░░'
-sq_full = '██'
+import random
 
-print('''
-██ ⭓⭓
-██ ██
-''')
-for i in range(10):
-    for i in range(10):
-        print(sq_full,end=' ')
-    print('')
+a, = random.choices((0,1),(30,70))
+
+print(a)
