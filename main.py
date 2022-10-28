@@ -144,7 +144,7 @@ def update_table():
     for cell in cell_list:
         if i % 10 == 0:
             string += cell.__str__() + ' '
-            string += '\n'
+            string += '\n\n'
         else:
             string += cell.__str__() + ' '
         i += 1
