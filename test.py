@@ -21,8 +21,8 @@ class Cell:
     def change_stat(self):
         self.stat = 1 if self.stat == 0 else 0
 
-cell1 = Cell(1,0)
-cell2 = Cell(2,1)
-d = {'1':cell1,'2':cell2}
+ls = [1,2,None]
 
-print(d.get('2').stat)
+a ='up'
+b = False
+print(b is not False)
