@@ -155,7 +155,7 @@ def update_table():
     for cell in cell_list:
         if i % 10 == 0:
             string += cell.__str__() + ' '
-            string += '\n'
+            string += '\n\n'
         else:
             string += cell.__str__() + ' '
         i += 1
@@ -192,17 +192,16 @@ def main(d):
     current_generation += 1
 
 if __name__ == '__main__':
-    # generate_initial_table(40)
-    generate_prepared_table(pre_table)
+    generate_initial_table(40)
     d = create_dict_num_cell()
     main(d)
     while True:
         if table_inf().get('dead_cells') == 0:
             break
         new_gen(d)
-        for i in pre_table:
-            print(d.get(str(i)).ls, d.get(str(i)).pos, d.get(str(i)))
+
         main(d)
-        input('>>> ')
-        # clear()
+        # input('>>> ')
+        sleep(0.3)
+        clear()
 
