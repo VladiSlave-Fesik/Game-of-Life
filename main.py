@@ -46,14 +46,17 @@ class Cell:
     def __init__(self,position=1, status=0):
         self.stat = status
         self.pos = position
-        self.symb = sq_null if self.stat is 0 else sq_full
+        self.symb = sq_null if self.stat == 0 else sq_full
+        self.next_stat = None
 
     def __str__(self):
         return self.symb
 
     def change_stat(self):
-        self.stat = 1 if self.stat == 0 else 0
-        self.symb = sq_null if self.stat is 0 else sq_full
+        if self.next_stat is not None:
+            self.stat = self.next_stat
+            self.next_stat = None
+        self.symb = sq_null if self.stat == 0 else sq_full
 
     def new_gen(self,d):
         self.ls = []
@@ -109,15 +112,16 @@ class Cell:
 
 
         finally:
-            if self.stat == 0:
-                if len(self.ls) == 3:
-                    self.change_stat()
+            if self.stat == 0 and len(self.ls) == 3:
+                self.next_stat = 1
 
             elif self.stat == 1:
                 if len(self.ls) in (2,3):
-                    pass
+                    self.next_stat = 1
+
                 elif len(self.ls) > 3 or len(self.ls) < 2:
-                    self.change_stat()
+                    self.next_stat = 0
+
 
 
 
@@ -125,6 +129,10 @@ class Cell:
 def new_gen(d):
     for cell in cell_list:
         cell.new_gen(d)
+
+def change_stats():
+    for cell in cell_list:
+        cell.change_stat()
 
 def generate_status(percent:int):
     '''The percentage argument means the chance that the cell will be 'alive' '''
@@ -197,11 +205,10 @@ if __name__ == '__main__':
     d = create_dict_num_cell()
     main(d)
     while True:
-        if table_inf().get('dead_cells') == 0:
+        if table_inf().get('alive_cells') == 0:
             break
         new_gen(d)
-        for i in pre_table:
-            print(d.get(str(i)).ls, d.get(str(i)).pos, d.get(str(i)))
+        change_stats()
         main(d)
         input('>>> ')
         # clear()
