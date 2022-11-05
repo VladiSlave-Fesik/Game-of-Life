@@ -39,84 +39,89 @@ coord_table = '''
 91 92 93 94 95 96 97 98 99 100 
 '''
 
+pre_table = [36,46,56,55,44]
+
 class Cell:
 
     def __init__(self,position=1, status=0):
         self.stat = status
         self.pos = position
-        self.symb = sq_null if self.stat is 0 else sq_full
+        self.symb = sq_null if self.stat == 0 else sq_full
+        self.next_stat = None
 
     def __str__(self):
         return self.symb
 
     def change_stat(self):
-        self.stat = 1 if self.stat == 0 else 0
-        self.symb = sq_null if self.stat is 0 else sq_full
+        if self.next_stat is not None:
+            self.stat = self.next_stat
+            self.next_stat = None
+        self.symb = sq_null if self.stat == 0 else sq_full
 
     def new_gen(self,d):
         self.ls = []
 
         try:
-            # print('da', self.pos,d.get(str(self.pos - 10)).pos)
-            self.up = True if d.get(str(self.pos - 10)).stat == 1 else False
-            if self.up is True:
+            self.up = 'up' if d.get(str(self.pos - 10)).stat == 1 else False
+            if self.up is not False:
                 self.ls.append(self.up)
         except:
             pass
         try:
-            self.down = True if d.get(str(self.pos + 10)).stat == 1 else False
-            if self.down is True:
+            self.down = 'down' if d.get(str(self.pos + 10)).stat == 1 else False
+            if self.down is not False:
                 self.ls.append(self.down)
         except:
             pass
         try:
-            self.left = True if d.get(str(self.pos - 1)).stat == 1 else False
-            if self.left is True:
+            self.left = 'left' if d.get(str(self.pos - 1)).stat == 1 else False
+            if self.left is not False:
                 self.ls.append(self.left)
         except:
             pass
         try:
-            self.right = True if d.get(str(self.pos + 1)).stat == 1 else False
-            if self.right is True:
+            self.right = 'right' if d.get(str(self.pos + 1)).stat == 1 else False
+            if self.right is not False:
                 self.ls.append(self.right)
         except:
             pass
         try:
-            self.up_left = True if d.get(str(self.pos - 11)).stat == 1 else False
-            if self.up_left is True:
+            self.up_left = 'up_left' if d.get(str(self.pos - 11)).stat == 1 else False
+            if self.up_left is not False:
                 self.ls.append(self.up_left)
         except:
             pass
         try:
-            self.down_left = True if d.get(str(self.pos + 9)).stat == 1 else False
-            if self.down_left is True:
+            self.down_left = 'down_left' if d.get(str(self.pos + 9)).stat == 1 else False
+            if self.down_left is not False:
                 self.ls.append(self.down_left)
         except:
             pass
         try:
-            self.up_right = True if d.get(str(self.pos - 9)).stat == 1 else False
-            if self.up_right is True:
+            self.up_right = 'up_right' if d.get(str(self.pos - 9)).stat == 1 else False
+            if self.up_right is not False:
                 self.ls.append(self.up_right)
         except:
             pass
         try:
-            self.down_right = True if d.get(str(self.pos + 11)).stat == 1 else False
-            if self.down_right is True:
+            self.down_right = 'down_right' if d.get(str(self.pos + 11)).stat == 1 else False
+            if self.down_right is not False:
                 self.ls.append(self.down_right)
         except:
             pass
 
 
         finally:
-            if self.stat == 0:
-                if len(self.ls) == 3:
-                    self.change_stat()
+            if self.stat == 0 and len(self.ls) == 3:
+                self.next_stat = 1
 
             elif self.stat == 1:
                 if len(self.ls) in (2,3):
-                    pass
+                    self.next_stat = 1
+
                 elif len(self.ls) > 3 or len(self.ls) < 2:
-                    self.change_stat()
+                    self.next_stat = 0
+
 
 
 
@@ -124,6 +129,10 @@ class Cell:
 def new_gen(d):
     for cell in cell_list:
         cell.new_gen(d)
+
+def change_stats():
+    for cell in cell_list:
+        cell.change_stat()
 
 def generate_status(percent:int):
     '''The percentage argument means the chance that the cell will be 'alive' '''
@@ -138,13 +147,23 @@ def generate_initial_table(percent_of_alive:int):
         cell = Cell(position=i, status=generate_status(percent_of_alive))
         cell_list.append(cell)
 
+def generate_prepared_table(pre):
+    global cell_list
+    cell_list = []
+    for i in range(1,101):
+        if i in pre:
+            cell = Cell(position=i, status=1)
+        else:
+            cell = Cell(position=i, status= 0)
+        cell_list.append(cell)
+
 def update_table():
     i = 1
     string = ''''''
     for cell in cell_list:
         if i % 10 == 0:
             string += cell.__str__() + ' '
-            string += '\n\n'
+            string += '\n'
         else:
             string += cell.__str__() + ' '
         i += 1
@@ -175,20 +194,22 @@ def create_dict_num_cell():
 
 def main(d):
     global current_generation
-
     print(update_table())
     print_inf()
     print('')
-    new_gen(d)
     current_generation += 1
 
 if __name__ == '__main__':
-    generate_initial_table(30)
+    # generate_initial_table(40)
+    generate_prepared_table(pre_table)
     d = create_dict_num_cell()
+    main(d)
     while True:
-        if table_inf().get('dead_cells') == 0:
+        if table_inf().get('alive_cells') == 0:
             break
+        new_gen(d)
+        change_stats()
         main(d)
-        sleep(0.3)
-        clear()
+        input('>>> ')
+        # clear()
 
