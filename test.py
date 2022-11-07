@@ -1,3 +1,5 @@
+import pyfiglet as fg
+
 coord_table = '''
 1  2  3  4  5  6  7  8  9  10 
 11 12 13 14 15 16 17 18 19 20 
@@ -11,6 +13,8 @@ coord_table = '''
 91 92 93 94 95 96 97 98 99 100 
 '''
 
+
+
 class Cell:
 
     def __init__(self,position=1, status=0):
@@ -21,8 +25,16 @@ class Cell:
     def change_stat(self):
         self.stat = 1 if self.stat == 0 else 0
 
-ls = [1,2,None]
 
-a ='up'
-b = False
-print(b is not False)
+sq_n1 = '□'
+sq_f1 = '■'
+sq_n2 = '░░'
+sq_f2 = '██'
+sq_n3 = ' 0'
+sq_f3 = ' 1'
+sq_n4 = '[□]'
+sq_f4 = '[■]'
+
+a = input('>>> ')
+print(a)
+print('da' + a + 'net')

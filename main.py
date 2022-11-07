@@ -1,31 +1,35 @@
 import os
 from time import sleep
 import random as rnd
+import pyfiglet as fg
 
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
 
 sq_n1 = '□'
 sq_f1 = '■'
-
 sq_n2 = '░░'
 sq_f2 = '██'
-
 sq_n3 = ' 0'
 sq_f3 = ' 1'
-
+sq_n4 = '[□]'
+sq_f4 = '[■]'
 sq_null = sq_n2
 sq_full = sq_f2
 
-cell_list = []
+line_sep1 = '\n'
+line_sep2 = '\n\n'
+line_sep = line_sep2
 
+cell_sep1 = ' '
+cell_sep2 = '  '
+cell_sep = cell_sep2
+
+cell_list = []
 current_generation = 0
 
-game_field = 10,10
-x_field = game_field[0]
-y_field = game_field[1]
-
 clear = lambda: os.system('cls')
+
 coord_table = '''
 1  2  3  4  5  6  7  8  9  10 
 11 12 13 14 15 16 17 18 19 20 
@@ -39,7 +43,12 @@ coord_table = '''
 91 92 93 94 95 96 97 98 99 100 
 '''
 
-pre_table = [36,46,56,55,44]
+glider = [36,46,56,55,44]
+
+exit_code = None
+exit_code_dict = {0:'The game is stopped due to the fact that the number of live cells = 0','∞':'Game paused because the table has not changed from the previous generation'}
+
+settings_dict = {}
 
 class Cell:
 
@@ -123,9 +132,6 @@ class Cell:
                     self.next_stat = 0
 
 
-
-
-
 def new_gen(d):
     for cell in cell_list:
         cell.new_gen(d)
@@ -162,10 +168,10 @@ def update_table():
     string = ''''''
     for cell in cell_list:
         if i % 10 == 0:
-            string += cell.__str__() + ' '
-            string += '\n'
+            string += cell.__str__() + cell_sep
+            string += line_sep
         else:
-            string += cell.__str__() + ' '
+            string += cell.__str__() + cell_sep
         i += 1
     return string
 
@@ -194,22 +200,242 @@ def create_dict_num_cell():
 
 def main(d):
     global current_generation
-    print(update_table())
+    global table
+    print(table:=update_table())
     print_inf()
     print('')
     current_generation += 1
 
-if __name__ == '__main__':
-    # generate_initial_table(40)
-    generate_prepared_table(pre_table)
-    d = create_dict_num_cell()
-    main(d)
-    while True:
-        if table_inf().get('alive_cells') == 0:
-            break
-        new_gen(d)
-        change_stats()
-        main(d)
-        input('>>> ')
-        # clear()
+def settings_menu():
+    global settings_dict
+    global random_ch
+    print('Input the settings, you can also skip to not change or select an already preset\n')
+    print('''
+        Enter dead and alive cell symbol through a space:
+        □
+        ■
 
+        ░░ - standard
+        ██ - standard
+
+        0
+        1
+
+        [□]
+        [■]''')
+
+    alive_cell = input('\tAlive cell: ')
+    dead_cell = input('\tDead cell: ')
+
+    cell_separator = input('''
+    Cell separator:
+    cell_sep1 = ' ' 
+    cell_sep2 = '  ' - standard
+    >>> ''')
+
+    line_separator = input('''
+    Line separator: (input \\n without \\ - n) 
+    line_sep1 = '\\n'
+    line_sep2 = '\\n\\n' - standard
+    >>> ''')
+
+    mode = input('''
+    Game mode:
+    Random - standard
+    Glider
+    Input
+    >>> ''')
+
+    if mode.lower() == 'random':
+        random_ch = int(input('Print chance of alive cell: '))
+
+    tbs = input('''
+    Table per second | tbs  3 - standard
+    max - no limit
+    0 - after each generation, input is expected
+    your int
+    >>> ''')
+
+    clear_or_not = input('''
+    Whether to clear the console from the table? [y/n]
+    >>> ''')
+
+    settings_dict = {'sq_null':dead_cell,'sq_full':alive_cell,'line_sep':line_separator,'cell_sep':cell_separator,'mode':mode,'tbs':tbs,'cln':clear_or_not}
+
+
+if __name__ == '__main__':
+
+    print(fg.Figlet(font='slant',width=300).renderText('Game of Life'))
+    ans = input('''
+    This is a console version of the game of life written in Python.
+    Would you like to change settings?
+    [start/settings] >>> ''')
+
+    while ans.lower() not in ['settings','start']:
+        ans = input('[start/settings] >>> ')
+        print()
+
+    if ans.lower() == 'start':
+        if ans == 'start':
+            generate_initial_table(40)
+            # generate_prepared_table(pre_table)
+            d = create_dict_num_cell()
+            main(d)
+            clear()
+            while True:
+
+                last_table = table
+
+                new_gen(d)
+                change_stats()
+                main(d)
+
+                if table_inf().get('alive_cells') == 0:
+                    exit_code = 0
+                    break
+
+                if last_table == table:
+                    exit_code = '∞'
+                    break
+
+                sleep(round(1 / 3, 5))
+
+                clear()
+
+    elif ans.lower() == 'settings':
+        settings_menu()
+
+        sq_null = settings_dict['sq_null'] if settings_dict['sq_null'] else sq_n2
+        sq_full = settings_dict['sq_full'] if settings_dict['sq_full'] else sq_f2
+
+        if len(settings_dict['line_sep']) == 0:
+            line_sep = '\n\n'
+        elif settings_dict['line_sep'] == 'n':
+            line_sep = '\n'
+        elif settings_dict['line_sep'] == 'nn':
+            line_sep = '\n\n'
+        else:
+            line_sep = settings_dict['line_sep']
+
+        cell_sep = settings_dict['cell_sep'] if settings_dict['cell_sep'] else '  '
+
+
+        if settings_dict['mode'].lower() == 'glider':
+            generate_prepared_table(glider)
+            d = create_dict_num_cell()
+            main(d)
+            if settings_dict['cln'].lower() == 'y':
+                clear()
+            while True:
+
+                last_table = table
+
+                new_gen(d)
+                change_stats()
+                main(d)
+
+                if table_inf().get('alive_cells') == 0:
+                    exit_code = 0
+                    break
+
+                if last_table == table:
+                    exit_code = '∞'
+                    break
+
+                if len(settings_dict['tbs']) == 0:
+                    sleep(round(1 / 3, 5))
+
+                elif settings_dict['tbs'].lower() == 'max':
+                    pass
+
+                elif settings_dict['tbs'] == '0':
+                    input('enter >>> ')
+
+                else:
+                    sleep(round(1 / int(settings_dict['tbs']), 5))
+
+                if settings_dict['cln'].lower() == 'y':
+                    clear()
+
+        elif settings_dict['mode'].lower() == 'random':
+            generate_initial_table(random_ch)
+            d = create_dict_num_cell()
+            main(d)
+            if settings_dict['cln'].lower() == 'y':
+                clear()
+            while True:
+
+                last_table = table
+
+                new_gen(d)
+                change_stats()
+                main(d)
+
+                if table_inf().get('alive_cells') == 0:
+                    exit_code = 0
+                    break
+
+                if last_table == table:
+                    exit_code = '∞'
+                    break
+
+                if len(settings_dict['tbs']) == 0:
+                    sleep(round(1 / 3, 5))
+
+                elif settings_dict['tbs'].lower() == 'max':
+                    pass
+
+                elif settings_dict['tbs'] == '0':
+                    input('enter >>> ')
+
+                else:
+                    sleep(round(1 / int(settings_dict['tbs']), 5))
+
+                if settings_dict['cln'].lower() == 'y':
+                    clear()
+
+        elif settings_dict['mode'].lower() == 'input':
+            print('Enter, separated by a space, the coordinates of those cells that must be filled')
+            print(coord_table)
+
+            pre_table = (map(int,input('>>> ').split()))
+
+            generate_prepared_table(pre_table)
+            d = create_dict_num_cell()
+            main(d)
+            if settings_dict['cln'].lower() == 'y':
+                clear()
+            while True:
+
+                last_table = table
+
+                if table_inf().get('alive_cells') == 0:
+                    exit_code = 0
+                    break
+
+                new_gen(d)
+                change_stats()
+                main(d)
+
+                if last_table == table:
+                    exit_code = '∞'
+                    break
+
+                if len(settings_dict['tbs']) == 0:
+                    sleep(round(1 / 3, 5))
+
+                elif settings_dict['tbs'].lower() == 'max':
+                    pass
+
+                elif settings_dict['tbs'] == '0':
+                    input('enter >>> ')
+
+                else:
+                    sleep(round(1 / int(settings_dict['tbs']), 5))
+
+                if settings_dict['cln'].lower() == 'y':
+                    clear()
+
+print(exit_code_dict[exit_code])
+
+input('>>>')
