@@ -234,7 +234,7 @@ def settings_menu():
     >>> ''')
 
     line_separator = input('''
-    Line separator: (input \\n without \\ - n) 
+    Line separator: 
     line_sep1 = '\\n'
     line_sep2 = '\\n\\n' - standard
     >>> ''')
@@ -310,12 +310,8 @@ if __name__ == '__main__':
 
         if len(settings_dict['line_sep']) == 0:
             line_sep = '\n\n'
-        elif settings_dict['line_sep'] == 'n':
-            line_sep = '\n'
-        elif settings_dict['line_sep'] == 'nn':
-            line_sep = '\n\n'
         else:
-            line_sep = settings_dict['line_sep']
+            line_sep = settings_dict['line_sep'].replace(r'\n','\n')
 
         cell_sep = settings_dict['cell_sep'] if settings_dict['cell_sep'] else '  '
 

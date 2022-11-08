@@ -35,6 +35,6 @@ sq_f3 = ' 1'
 sq_n4 = '[□]'
 sq_f4 = '[■]'
 
-a = input('>>> ')
-print(a)
-print('da' + a + 'net')
+a = input()
+b = a.replace(r'\n','\n')
+print(a,b,sep='\n')
