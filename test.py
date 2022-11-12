@@ -124,6 +124,6 @@ sq_f4 = '[■]'
 
 d = {}
 
-
-t = 0.333
-print(f'tbs/{round(1/t,2)}')
+a = input()
+if a:
+    print('da')

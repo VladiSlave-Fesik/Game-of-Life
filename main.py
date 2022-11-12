@@ -44,6 +44,9 @@ coord_table = '''
 10 *  *  *  *  *  *  *  *  *  *
 '''
 
+num_x = 10
+num_y = 10
+
 glider = ['6;3','6;4','6;5','5;5','4;4']
 
 exit_code = None
@@ -152,16 +155,16 @@ def generate_status(percent:int):
 def generate_initial_table(percent_of_alive:int):
     global cell_list
     cell_list = []
-    for y in range(1,11):
-        for x in range(1,11):
+    for y in range(1,num_y+1):
+        for x in range(1,num_x+1):
             cell = Cell(position=f'{x};{y}', status=generate_status(percent_of_alive))
             cell_list.append(cell)
 
 def generate_prepared_table(pre):
     global cell_list
     cell_list = []
-    for y in range(1,11):
-        for x in range(1,11):
+    for y in range(1,num_y+1):
+        for x in range(1,num_x+1):
             if f'{x};{y}' in pre:
                 cell = Cell(position=f'{x};{y}', status=1)
             else:
@@ -169,15 +172,14 @@ def generate_prepared_table(pre):
             cell_list.append(cell)
 
 def update_table():
-    i = 1
+    i = 0
     string = ''''''
-    for cell in cell_list:
-        if i % 10 == 0:
+    for y in range(1, num_y+1):
+        for x in range(1, num_x+1):
+            cell = cell_list[i]
             string += cell.__str__() + cell_sep
-            string += line_sep
-        else:
-            string += cell.__str__() + cell_sep
-        i += 1
+            i += 1
+        string += line_sep
     return string
 
 def table_inf():
@@ -186,7 +188,7 @@ def table_inf():
         l.append(i.stat)
 
     alive_cells = sum(l)
-    dead_cells = 100-alive_cells
+    dead_cells = num_x*num_y-alive_cells
     inf_dict = {'alive_cells': alive_cells, 'dead_cells': dead_cells, 'current_generation': current_generation}
 
     return inf_dict
@@ -198,8 +200,8 @@ def print_inf():
 def create_dict_num_cell():
     d = {}
     i = 0
-    for y in range(1, 11):
-        for x in range(1, 11):
+    for y in range(1, num_y+1):
+        for x in range(1, num_x+1):
             d[f'{x};{y}'] = cell_list[i]
             i += 1
     return d
@@ -214,7 +216,16 @@ def main(d):
 def settings_menu():
     global settings_dict
     global random_ch
+    global num_x,num_y
+
     print('Input the settings, you can also skip to not change or select an already preset\n')
+    print('Standard - 10,10. Skip not to change.')
+    num_x_inp = input('Cells in a row (x):')
+    num_y_inp = input('Cells in a column (y):')
+
+    num_x = 10 if not num_x_inp else int(num_x_inp)
+    num_y = 10 if not num_y_inp else int(num_y_inp)
+
     print('''
         Enter dead and alive cell symbol through a space:
         □
@@ -252,7 +263,7 @@ def settings_menu():
     >>> ''')
 
     if mode.lower() == 'random':
-        random_ch = int(input('Print chance of alive cell: '))
+        random_ch = int(input('Input a chance of alive cell: '))
 
     tbs = input('''
     Table per second | tbs  3 - standard
@@ -424,6 +435,48 @@ if __name__ == '__main__':
                 change_stats()
                 main(d)
 
+                try:
+                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                except:
+                    pass
+
+                if table_inf().get('alive_cells') == 0:
+                    exit_code = 0
+                    break
+
+                if last_table == table:
+                    exit_code = '∞'
+                    break
+                start = time()
+
+                if len(settings_dict['tbs']) == 0:
+                    sleep(round(1 / 3, 5))
+
+                elif settings_dict['tbs'].lower() == 'max':
+                    pass
+
+                elif settings_dict['tbs'] == '0':
+                    input('enter >>> ')
+
+                else:
+                    sleep(round(1 / int(settings_dict['tbs']), 5))
+
+                if settings_dict['cln'].lower() == 'y':
+                    clear()
+
+        else:
+            generate_initial_table(40)
+            d = create_dict_num_cell()
+            main(d)
+            if settings_dict['cln'].lower() == 'y':
+                clear()
+            while True:
+
+                last_table = table
+
+                new_gen(d)
+                change_stats()
+                main(d)
                 try:
                     print(f'tbs:{round(1 / (time() - start), 2)}\n')
                 except:
