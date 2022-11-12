@@ -508,4 +508,4 @@ if __name__ == '__main__':
 
 print(exit_code_dict[exit_code])
 
-input('>>>')
+input('e>n>d>')
