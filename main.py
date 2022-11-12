@@ -1,5 +1,5 @@
 import os
-from time import sleep
+from time import sleep,time
 import random as rnd
 import pyfiglet as fg
 
@@ -31,19 +31,20 @@ current_generation = 0
 clear = lambda: os.system('cls')
 
 coord_table = '''
-1  2  3  4  5  6  7  8  9  10 
-11 12 13 14 15 16 17 18 19 20 
-21 22 23 24 25 26 27 28 29 30 
-31 32 33 34 35 36 37 38 39 40 
-41 42 43 44 45 46 47 48 49 50 
-51 52 53 54 55 56 57 58 59 60 
-61 62 63 64 65 66 67 68 69 70 
-71 72 73 74 75 76 77 78 79 80 
-81 82 83 84 85 86 87 88 89 90 
-91 92 93 94 95 96 97 98 99 100 
+   1  2  3  4  5  6  7  8  9  10 
+1  *  *  *  *  *  *  *  *  *  *
+2  *  *  *  *  *  *  *  *  *  *
+3  *  *  *  *  *  *  *  *  *  *
+4  *  *  *  *  *  *  *  *  *  *
+5  *  *  *  *  *  *  *  *  *  *
+6  *  *  *  *  *  *  *  *  *  *
+7  *  *  *  *  *  *  *  *  *  *
+8  *  *  *  *  *  *  *  *  *  *
+9  *  *  *  *  *  *  *  *  *  *
+10 *  *  *  *  *  *  *  *  *  *
 '''
 
-glider = [36,46,56,55,44]
+glider = ['6;3','6;4','6;5','5;5','4;4']
 
 exit_code = None
 exit_code_dict = {0:'The game is stopped due to the fact that the number of live cells = 0','∞':'Game paused because the table has not changed from the previous generation'}
@@ -52,7 +53,7 @@ settings_dict = {}
 
 class Cell:
 
-    def __init__(self,position=1, status=0):
+    def __init__(self,position='1;1', status=0):
         self.stat = status
         self.pos = position
         self.symb = sq_null if self.stat == 0 else sq_full
@@ -67,53 +68,54 @@ class Cell:
             self.next_stat = None
         self.symb = sq_null if self.stat == 0 else sq_full
 
-    def new_gen(self,d):
+    def new_gen(self,d:dict):
         self.ls = []
-
+        self.n_pos = self.pos.split(';')
+        self.n_pos = list(map(int, self.n_pos))
         try:
-            self.up = 'up' if d.get(str(self.pos - 10)).stat == 1 else False
+            self.up = 'up' if d.get(f'{self.n_pos[0]};{self.n_pos[1]-1}').stat == 1 else False
             if self.up is not False:
                 self.ls.append(self.up)
         except:
             pass
         try:
-            self.down = 'down' if d.get(str(self.pos + 10)).stat == 1 else False
+            self.down = 'down' if d.get(f'{self.n_pos[0]};{self.n_pos[1]+1}').stat == 1 else False
             if self.down is not False:
                 self.ls.append(self.down)
         except:
             pass
         try:
-            self.left = 'left' if d.get(str(self.pos - 1)).stat == 1 else False
+            self.left = 'left' if d.get(f'{self.n_pos[0]-1};{self.n_pos[1]}').stat == 1 else False
             if self.left is not False:
                 self.ls.append(self.left)
         except:
             pass
         try:
-            self.right = 'right' if d.get(str(self.pos + 1)).stat == 1 else False
+            self.right = 'right' if d.get(f'{self.n_pos[0]+1};{self.n_pos[1]}').stat == 1 else False
             if self.right is not False:
                 self.ls.append(self.right)
         except:
             pass
         try:
-            self.up_left = 'up_left' if d.get(str(self.pos - 11)).stat == 1 else False
+            self.up_left = 'up_left' if d.get(f'{self.n_pos[0]-1};{self.n_pos[1]-1}').stat == 1 else False
             if self.up_left is not False:
                 self.ls.append(self.up_left)
         except:
             pass
         try:
-            self.down_left = 'down_left' if d.get(str(self.pos + 9)).stat == 1 else False
+            self.down_left = 'down_left' if d.get(f'{self.n_pos[0]-1};{self.n_pos[1]+1}').stat == 1 else False
             if self.down_left is not False:
                 self.ls.append(self.down_left)
         except:
             pass
         try:
-            self.up_right = 'up_right' if d.get(str(self.pos - 9)).stat == 1 else False
+            self.up_right = 'up_right' if d.get(f'{self.n_pos[0]+1};{self.n_pos[1]-1}').stat == 1 else False
             if self.up_right is not False:
                 self.ls.append(self.up_right)
         except:
             pass
         try:
-            self.down_right = 'down_right' if d.get(str(self.pos + 11)).stat == 1 else False
+            self.down_right = 'down_right' if d.get(f'{self.n_pos[0]+1};{self.n_pos[1]+1}').stat == 1 else False
             if self.down_right is not False:
                 self.ls.append(self.down_right)
         except:
@@ -121,6 +123,7 @@ class Cell:
 
 
         finally:
+
             if self.stat == 0 and len(self.ls) == 3:
                 self.next_stat = 1
 
@@ -149,19 +152,21 @@ def generate_status(percent:int):
 def generate_initial_table(percent_of_alive:int):
     global cell_list
     cell_list = []
-    for i in range(1,101):
-        cell = Cell(position=i, status=generate_status(percent_of_alive))
-        cell_list.append(cell)
+    for y in range(1,11):
+        for x in range(1,11):
+            cell = Cell(position=f'{x};{y}', status=generate_status(percent_of_alive))
+            cell_list.append(cell)
 
 def generate_prepared_table(pre):
     global cell_list
     cell_list = []
-    for i in range(1,101):
-        if i in pre:
-            cell = Cell(position=i, status=1)
-        else:
-            cell = Cell(position=i, status= 0)
-        cell_list.append(cell)
+    for y in range(1,11):
+        for x in range(1,11):
+            if f'{x};{y}' in pre:
+                cell = Cell(position=f'{x};{y}', status=1)
+            else:
+                cell = Cell(position=f'{x};{y}', status= 0)
+            cell_list.append(cell)
 
 def update_table():
     i = 1
@@ -192,10 +197,11 @@ def print_inf():
 
 def create_dict_num_cell():
     d = {}
-    i = 1
-    for cell in cell_list:
-        d[str(i)] = cell
-        i += 1
+    i = 0
+    for y in range(1, 11):
+        for x in range(1, 11):
+            d[f'{x};{y}'] = cell_list[i]
+            i += 1
     return d
 
 def main(d):
@@ -203,7 +209,6 @@ def main(d):
     global table
     print(table:=update_table())
     print_inf()
-    print('')
     current_generation += 1
 
 def settings_menu():
@@ -276,31 +281,36 @@ if __name__ == '__main__':
         print()
 
     if ans.lower() == 'start':
-        if ans == 'start':
-            generate_initial_table(40)
-            # generate_prepared_table(pre_table)
-            d = create_dict_num_cell()
+        generate_initial_table(40)
+        # generate_prepared_table(pre_table)
+        d = create_dict_num_cell()
+        main(d)
+        clear()
+        while True:
+
+            last_table = table
+
+            new_gen(d)
+            change_stats()
             main(d)
+            try:
+                print(f'tbs:{round(1/(time()-start), 2)}\n')
+            except:
+                pass
+
+            if table_inf().get('alive_cells') == 0:
+                exit_code = 0
+                break
+
+            if last_table == table:
+                exit_code = '∞'
+                break
+            start = time()
+            sleep(round(1 / 3, 5))
+
             clear()
-            while True:
 
-                last_table = table
 
-                new_gen(d)
-                change_stats()
-                main(d)
-
-                if table_inf().get('alive_cells') == 0:
-                    exit_code = 0
-                    break
-
-                if last_table == table:
-                    exit_code = '∞'
-                    break
-
-                sleep(round(1 / 3, 5))
-
-                clear()
 
     elif ans.lower() == 'settings':
         settings_menu()
@@ -366,6 +376,10 @@ if __name__ == '__main__':
                 new_gen(d)
                 change_stats()
                 main(d)
+                try:
+                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                except:
+                    pass
 
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
@@ -374,6 +388,7 @@ if __name__ == '__main__':
                 if last_table == table:
                     exit_code = '∞'
                     break
+                start = time()
 
                 if len(settings_dict['tbs']) == 0:
                     sleep(round(1 / 3, 5))
@@ -391,10 +406,10 @@ if __name__ == '__main__':
                     clear()
 
         elif settings_dict['mode'].lower() == 'input':
-            print('Enter, separated by a space, the coordinates of those cells that must be filled')
+            print('Enter, separated by a space, the coordinates of those cells that must be filled (1;1 10;5 7;3)')
             print(coord_table)
 
-            pre_table = (map(int,input('>>> ').split()))
+            pre_table = input('>>> ').split()
 
             generate_prepared_table(pre_table)
             d = create_dict_num_cell()
@@ -405,17 +420,23 @@ if __name__ == '__main__':
 
                 last_table = table
 
-                if table_inf().get('alive_cells') == 0:
-                    exit_code = 0
-                    break
-
                 new_gen(d)
                 change_stats()
                 main(d)
 
+                try:
+                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                except:
+                    pass
+
+                if table_inf().get('alive_cells') == 0:
+                    exit_code = 0
+                    break
+
                 if last_table == table:
                     exit_code = '∞'
                     break
+                start = time()
 
                 if len(settings_dict['tbs']) == 0:
                     sleep(round(1 / 3, 5))
