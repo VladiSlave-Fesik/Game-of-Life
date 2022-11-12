@@ -350,6 +350,10 @@ if __name__ == '__main__':
                 new_gen(d)
                 change_stats()
                 main(d)
+                try:
+                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                except:
+                    pass
 
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
@@ -358,7 +362,7 @@ if __name__ == '__main__':
                 if last_table == table:
                     exit_code = '∞'
                     break
-
+                start = time()
                 if len(settings_dict['tbs']) == 0:
                     sleep(round(1 / 3, 5))
 
