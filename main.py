@@ -1,4 +1,4 @@
-from time import sleep,time
+from time import sleep, time
 import pyfiglet as fg
 from record import *
 
@@ -46,18 +46,19 @@ coord_table = '''
 num_x = 10
 num_y = 10
 
-glider = ['6;3','6;4','6;5','5;5','4;4']
+glider = ['6;3', '6;4', '6;5', '5;5', '4;4']
 
 exit_code = None
-exit_code_dict = {0:'The game is stopped due to the fact that the number of live cells = 0',
-                  '∞':'Game paused because the table has not changed from the previous generation',
-                  'loop':'The game has stopped due to being caught in a loop'}
+exit_code_dict = {0: 'The game is stopped due to the fact that the number of live cells = 0',
+                  '∞': 'Game paused because the table has not changed from the previous generation',
+                  'loop': 'The game has stopped due to being caught in a loop'}
 
 settings_dict = {}
 
+
 class Cell:
 
-    def __init__(self,position='1;1', status=0):
+    def __init__(self, position='1;1', status=0):
         self.stat = status
         self.pos = position
         self.symb = sq_null if self.stat == 0 else sq_full
@@ -72,54 +73,54 @@ class Cell:
             self.next_stat = None
         self.symb = sq_null if self.stat == 0 else sq_full
 
-    def new_gen(self,d:dict):
+    def new_gen(self, d: dict):
         self.ls = []
         self.n_pos = self.pos.split(';')
         self.n_pos = list(map(int, self.n_pos))
         try:
-            self.up = 'up' if d.get(f'{self.n_pos[0]};{self.n_pos[1]-1}').stat == 1 else False
+            self.up = 'up' if d.get(f'{self.n_pos[0]};{self.n_pos[1] - 1}').stat == 1 else False
             if self.up is not False:
                 self.ls.append(self.up)
         except:
             pass
         try:
-            self.down = 'down' if d.get(f'{self.n_pos[0]};{self.n_pos[1]+1}').stat == 1 else False
+            self.down = 'down' if d.get(f'{self.n_pos[0]};{self.n_pos[1] + 1}').stat == 1 else False
             if self.down is not False:
                 self.ls.append(self.down)
         except:
             pass
         try:
-            self.left = 'left' if d.get(f'{self.n_pos[0]-1};{self.n_pos[1]}').stat == 1 else False
+            self.left = 'left' if d.get(f'{self.n_pos[0] - 1};{self.n_pos[1]}').stat == 1 else False
             if self.left is not False:
                 self.ls.append(self.left)
         except:
             pass
         try:
-            self.right = 'right' if d.get(f'{self.n_pos[0]+1};{self.n_pos[1]}').stat == 1 else False
+            self.right = 'right' if d.get(f'{self.n_pos[0] + 1};{self.n_pos[1]}').stat == 1 else False
             if self.right is not False:
                 self.ls.append(self.right)
         except:
             pass
         try:
-            self.up_left = 'up_left' if d.get(f'{self.n_pos[0]-1};{self.n_pos[1]-1}').stat == 1 else False
+            self.up_left = 'up_left' if d.get(f'{self.n_pos[0] - 1};{self.n_pos[1] - 1}').stat == 1 else False
             if self.up_left is not False:
                 self.ls.append(self.up_left)
         except:
             pass
         try:
-            self.down_left = 'down_left' if d.get(f'{self.n_pos[0]-1};{self.n_pos[1]+1}').stat == 1 else False
+            self.down_left = 'down_left' if d.get(f'{self.n_pos[0] - 1};{self.n_pos[1] + 1}').stat == 1 else False
             if self.down_left is not False:
                 self.ls.append(self.down_left)
         except:
             pass
         try:
-            self.up_right = 'up_right' if d.get(f'{self.n_pos[0]+1};{self.n_pos[1]-1}').stat == 1 else False
+            self.up_right = 'up_right' if d.get(f'{self.n_pos[0] + 1};{self.n_pos[1] - 1}').stat == 1 else False
             if self.up_right is not False:
                 self.ls.append(self.up_right)
         except:
             pass
         try:
-            self.down_right = 'down_right' if d.get(f'{self.n_pos[0]+1};{self.n_pos[1]+1}').stat == 1 else False
+            self.down_right = 'down_right' if d.get(f'{self.n_pos[0] + 1};{self.n_pos[1] + 1}').stat == 1 else False
             if self.down_right is not False:
                 self.ls.append(self.down_right)
         except:
@@ -132,7 +133,7 @@ class Cell:
                 self.next_stat = 1
 
             elif self.stat == 1:
-                if len(self.ls) in (2,3):
+                if len(self.ls) in (2, 3):
                     self.next_stat = 1
 
                 elif len(self.ls) > 3 or len(self.ls) < 2:
@@ -143,45 +144,51 @@ def new_gen(d):
     for cell in cell_list:
         cell.new_gen(d)
 
+
 def change_stats():
     for cell in cell_list:
         cell.change_stat()
 
-def generate_status(percent:int):
+
+def generate_status(percent: int):
     '''The percentage argument means the chance that the cell will be 'alive' '''
 
     st, = rnd.choices((0, 1), (100 - percent, percent))
     return st
 
-def generate_initial_table(percent_of_alive:int):
+
+def generate_initial_table(percent_of_alive: int):
     global cell_list
     cell_list = []
-    for y in range(1,num_y+1):
-        for x in range(1,num_x+1):
+    for y in range(1, num_y + 1):
+        for x in range(1, num_x + 1):
             cell = Cell(position=f'{x};{y}', status=generate_status(percent_of_alive))
             cell_list.append(cell)
+
 
 def generate_prepared_table(pre):
     global cell_list
     cell_list = []
-    for y in range(1,num_y+1):
-        for x in range(1,num_x+1):
+    for y in range(1, num_y + 1):
+        for x in range(1, num_x + 1):
             if f'{x};{y}' in pre:
                 cell = Cell(position=f'{x};{y}', status=1)
             else:
-                cell = Cell(position=f'{x};{y}', status= 0)
+                cell = Cell(position=f'{x};{y}', status=0)
             cell_list.append(cell)
+
 
 def update_table():
     i = 0
     string = ''''''
-    for y in range(1, num_y+1):
-        for x in range(1, num_x+1):
+    for y in range(1, num_y + 1):
+        for x in range(1, num_x + 1):
             cell = cell_list[i]
             string += cell.__str__() + cell_sep
             i += 1
         string += line_sep
     return string
+
 
 def table_inf():
     l = []
@@ -189,37 +196,42 @@ def table_inf():
         l.append(i.stat)
 
     alive_cells = sum(l)
-    dead_cells = num_x*num_y-alive_cells
+    dead_cells = num_x * num_y - alive_cells
     inf_dict = {'alive_cells': alive_cells, 'dead_cells': dead_cells, 'current_generation': current_generation}
 
     return inf_dict
+
 
 def print_inf():
     for i in table_inf():
         print(f'{i} - {table_inf().get(i)}')
 
+
 def create_dict_num_cell():
     d = {}
     i = 0
-    for y in range(1, num_y+1):
-        for x in range(1, num_x+1):
+    for y in range(1, num_y + 1):
+        for x in range(1, num_x + 1):
             d[f'{x};{y}'] = cell_list[i]
             i += 1
     return d
 
+
 def main(d):
     global current_generation
     global table
-    print(table:=update_table())
+    print(table := update_table())
     print_inf()
     current_generation += 1
+
 
 def settings_menu():
     global settings_dict
     global random_ch
-    global num_x,num_y
+    global num_x, num_y
 
-    print('Input the settings, you can also skip to not change or copy and input an already preset\nFor correct recording, do not change: cell signs, cell separator, line separator')
+    print(
+        'Input the settings, you can also skip to not change or copy and input an already preset\nFor correct recording, do not change: cell signs, cell separator, line separator')
     print('Standard - 10,10. Skip not to change.')
     num_x_inp = input('Cells in a row (x):')
     num_y_inp = input('Cells in a column (y):')
@@ -281,17 +293,19 @@ def settings_menu():
     Record game? [y/n]
     >>> ''')
 
-    settings_dict = {'sq_null':dead_cell,'sq_full':alive_cell,'line_sep':line_separator,'cell_sep':cell_separator,'mode':mode,'tbs':tbs,'cln':clear_or_not,'rec':rec}
+    settings_dict = {'sq_null': dead_cell, 'sq_full': alive_cell, 'line_sep': line_separator,
+                     'cell_sep': cell_separator, 'mode': mode, 'tbs': tbs, 'cln': clear_or_not, 'rec': rec}
+
 
 if __name__ == '__main__':
 
-    print(fg.Figlet(font='slant',width=300).renderText('Game of Life'))
+    print(fg.Figlet(font='slant', width=300).renderText('Game of Life'))
     ans = input('''
     This is a console version of the game of life written in Python.
     Would you like to change settings?
     [start/settings] >>> ''')
 
-    while ans.lower() not in ['settings','start']:
+    while ans.lower() not in ['settings', 'start']:
         ans = input('[start/settings] >>> ')
         print()
 
@@ -312,7 +326,7 @@ if __name__ == '__main__':
             change_stats()
             main(d)
             try:
-                print(f'tbs:{round(1/(time()-start), 2)}\n')
+                print(f'tbs:{round(1 / (time() - start), 2)}\n')
             except:
                 pass
             start = time()
@@ -331,7 +345,7 @@ if __name__ == '__main__':
             except:
                 pass
             eng_end = time()
-            sleep((1 / 3) - (eng_end-eng_start))
+            sleep((1 / 3) - (eng_end - eng_start))
 
 
     elif ans.lower() == 'settings':
@@ -343,10 +357,9 @@ if __name__ == '__main__':
         if len(settings_dict['line_sep']) == 0:
             line_sep = '\n\n'
         else:
-            line_sep = settings_dict['line_sep'].replace(r'\n','\n')
+            line_sep = settings_dict['line_sep'].replace(r'\n', '\n')
 
         cell_sep = settings_dict['cell_sep'] if settings_dict['cell_sep'] else '  '
-
 
         if settings_dict['mode'].lower() == 'glider':
             generate_prepared_table(glider)
@@ -355,7 +368,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
             while True:
                 eng_start = time()
                 try:
@@ -375,26 +388,26 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                            resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                         break
                 except:
                     pass
 
                 start = time()
                 if len(settings_dict['tbs']) == 0:
-                    sleep((1 / 3) - (start-eng_start))
+                    sleep((1 / 3) - (start - eng_start))
 
                 elif settings_dict['tbs'].lower() == 'max':
                     pass
@@ -403,13 +416,13 @@ if __name__ == '__main__':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start-eng_start))
+                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
 
                 if settings_dict['rec'] == 'y':
-                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                    resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
 
         elif settings_dict['mode'].lower() == 'random':
             generate_initial_table(random_ch)
@@ -418,7 +431,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
             while True:
                 eng_start = time()
                 try:
@@ -439,27 +452,26 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                            resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                         break
                 except:
                     pass
 
-
                 start = time()
                 if len(settings_dict['tbs']) == 0:
-                    sleep((1 / 3 , 5) - (start-eng_start))
+                    sleep((1 / 3, 5) - (start - eng_start))
 
                 elif settings_dict['tbs'].lower() == 'max':
                     pass
@@ -468,16 +480,17 @@ if __name__ == '__main__':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start-eng_start))
+                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
 
                 if settings_dict['rec'] == 'y':
-                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                    resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
 
         elif settings_dict['mode'].lower() == 'input':
-            print('Enter, separated by a space, the coordinates of those cells that must be filled, example - 1;1 10;5 7;3')
+            print(
+                'Enter, separated by a space, the coordinates of those cells that must be filled, example - 1;1 10;5 7;3')
             print(coord_table)
 
             pre_table = input('>>> ').split()
@@ -488,7 +501,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
             while True:
                 eng_start = time()
 
@@ -510,26 +523,26 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                            resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                         break
                 except:
                     pass
                 start = time()
 
                 if len(settings_dict['tbs']) == 0:
-                    sleep((1 / 3) - (start-eng_start))
+                    sleep((1 / 3) - (start - eng_start))
 
                 elif settings_dict['tbs'].lower() == 'max':
                     pass
@@ -538,12 +551,12 @@ if __name__ == '__main__':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start-eng_start))
+                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
                 if settings_dict['rec'] == 'y':
-                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                    resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
 
         else:
             generate_initial_table(40)
@@ -552,7 +565,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
             while True:
                 eng_start = time()
                 try:
@@ -572,26 +585,26 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                        resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                            resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
                         break
                 except:
                     pass
                 start = time()
 
                 if len(settings_dict['tbs']) == 0:
-                    sleep((1 / 3) - (start-eng_start))
+                    sleep((1 / 3) - (start - eng_start))
 
                 elif settings_dict['tbs'].lower() == 'max':
                     pass
@@ -600,20 +613,20 @@ if __name__ == '__main__':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start-eng_start))
+                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
                 if settings_dict['rec'] == 'y':
-                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
+                    resize_image(create_img(table, x=num_x, y=num_y), str(current_generation))
 
-
-print(exit_code_dict[exit_code],'\n')
+print(exit_code_dict[exit_code], '\n')
 try:
     if settings_dict['rec'] == 'y':
         fps = int(input('Enter the frame rate for the video: '))
         create_video(fps=fps)
         from record import name
+
         print(f'Name of record - {name}.mp4')
         delete_images()
 except:
