@@ -355,7 +355,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                create_img(table, str(current_generation),x=num_x,y=num_y)
+                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
             while True:
                 eng_start = time()
                 try:
@@ -375,19 +375,19 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            create_img(table, str(current_generation),x=num_x,y=num_y)
+                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                         break
                 except:
                     pass
@@ -409,7 +409,7 @@ if __name__ == '__main__':
                     clear()
 
                 if settings_dict['rec'] == 'y':
-                    create_img(table, str(current_generation),x=num_x,y=num_y)
+                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
 
         elif settings_dict['mode'].lower() == 'random':
             generate_initial_table(random_ch)
@@ -418,7 +418,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                create_img(table, str(current_generation),x=num_x,y=num_y)
+                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
             while True:
                 eng_start = time()
                 try:
@@ -439,19 +439,19 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            create_img(table, str(current_generation),x=num_x,y=num_y)
+                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                         break
                 except:
                     pass
@@ -474,7 +474,7 @@ if __name__ == '__main__':
                     clear()
 
                 if settings_dict['rec'] == 'y':
-                    create_img(table, str(current_generation),x=num_x,y=num_y)
+                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
 
         elif settings_dict['mode'].lower() == 'input':
             print('Enter, separated by a space, the coordinates of those cells that must be filled, example - 1;1 10;5 7;3')
@@ -488,7 +488,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                create_img(table, str(current_generation),x=num_x,y=num_y)
+                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
             while True:
                 eng_start = time()
 
@@ -510,19 +510,19 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            create_img(table, str(current_generation),x=num_x,y=num_y)
+                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                         break
                 except:
                     pass
@@ -543,7 +543,7 @@ if __name__ == '__main__':
                 if settings_dict['cln'].lower() == 'y':
                     clear()
                 if settings_dict['rec'] == 'y':
-                    create_img(table, str(current_generation),x=num_x,y=num_y)
+                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
 
         else:
             generate_initial_table(40)
@@ -552,7 +552,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                create_img(table, str(current_generation),x=num_x,y=num_y)
+                resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
             while True:
                 eng_start = time()
                 try:
@@ -572,19 +572,19 @@ if __name__ == '__main__':
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
                     if settings_dict['rec'] == 'y':
-                        create_img(table, str(current_generation),x=num_x,y=num_y)
+                        resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                     break
                 try:
                     if second_table == table:
                         exit_code = 'loop'
                         if settings_dict['rec'] == 'y':
-                            create_img(table, str(current_generation),x=num_x,y=num_y)
+                            resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
                         break
                 except:
                     pass
@@ -605,7 +605,7 @@ if __name__ == '__main__':
                 if settings_dict['cln'].lower() == 'y':
                     clear()
                 if settings_dict['rec'] == 'y':
-                    create_img(table, str(current_generation),x=num_x,y=num_y)
+                    resize_image(create_img(table,x=num_x,y=num_y),str(current_generation))
 
 
 print(exit_code_dict[exit_code],'\n')
@@ -619,4 +619,4 @@ try:
 except:
     pass
 sleep(0.5)
-input('>>>')
+input('e>n>d>')
