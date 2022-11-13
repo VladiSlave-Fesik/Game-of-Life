@@ -330,7 +330,6 @@ if __name__ == '__main__':
                     break
             except:
                 pass
-            sleep(0.1)
             eng_end = time()
             sleep((1 / 3) - (eng_end-eng_start))
 
