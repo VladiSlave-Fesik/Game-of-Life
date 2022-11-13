@@ -217,7 +217,7 @@ def settings_menu():
     global random_ch
     global num_x,num_y
 
-    print('Input the settings, you can also skip to not change or select an already preset\n')
+    print('Input the settings, you can also skip to not change or copy and input an already preset\nFor correct recording, do not change: cell signs, cell separator, line separator')
     print('Standard - 10,10. Skip not to change.')
     num_x_inp = input('Cells in a row (x):')
     num_y_inp = input('Cells in a column (y):')
