@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 movie/*.mp4
 test.py
+movie/*.mp4
 __pycache__/
 *.py[cod]
 *$py.class
