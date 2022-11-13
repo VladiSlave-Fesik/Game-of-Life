@@ -5,6 +5,7 @@ import string
 from PIL import Image, ImageFont, ImageDraw
 
 def create_video(pathIn='frames\\',pathOut='movie\\',fps=3):
+    global name
     name = ''.join(rnd.choice(string.ascii_letters + string.digits) for i in range(5))
     while name in os.listdir('movie'):
         name = ''.join(rnd.choice(string.ascii_letters + string.digits) for i in range(5))

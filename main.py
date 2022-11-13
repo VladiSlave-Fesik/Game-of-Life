@@ -547,14 +547,13 @@ if __name__ == '__main__':
                     create_img(table, str(current_generation))
 
 
-print(exit_code_dict[exit_code])
-
-
 print(exit_code_dict[exit_code],'\n')
 try:
     if settings_dict['rec'] == 'y':
         fps = int(input('Enter the frame rate for the video: '))
         create_video(fps=fps)
+        from record import name
+        print(f'Name of record - {name}.mp4')
         delete_images()
 except:
     pass
