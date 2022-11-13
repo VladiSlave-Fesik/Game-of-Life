@@ -1,7 +1,6 @@
-import os
 from time import sleep,time
-import random as rnd
 import pyfiglet as fg
+from record import *
 
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
@@ -276,8 +275,11 @@ def settings_menu():
     Whether to clear the console from the table? [y/n]
     >>> ''')
 
-    settings_dict = {'sq_null':dead_cell,'sq_full':alive_cell,'line_sep':line_separator,'cell_sep':cell_separator,'mode':mode,'tbs':tbs,'cln':clear_or_not}
+    rec = input('''
+    Record game? [y/n]
+    >>> ''')
 
+    settings_dict = {'sq_null':dead_cell,'sq_full':alive_cell,'line_sep':line_separator,'cell_sep':cell_separator,'mode':mode,'tbs':tbs,'cln':clear_or_not,'rec':rec}
 
 if __name__ == '__main__':
 
@@ -343,6 +345,8 @@ if __name__ == '__main__':
             main(d)
             if settings_dict['cln'].lower() == 'y':
                 clear()
+            if settings_dict['rec'] == 'y':
+                create_img(table, str(current_generation))
             while True:
 
                 last_table = table
@@ -357,10 +361,14 @@ if __name__ == '__main__':
 
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
                 start = time()
                 if len(settings_dict['tbs']) == 0:
@@ -377,6 +385,9 @@ if __name__ == '__main__':
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
+
+                if settings_dict['rec'] == 'y':
+                    create_img(table, str(current_generation))
 
         elif settings_dict['mode'].lower() == 'random':
             generate_initial_table(random_ch)
@@ -384,6 +395,8 @@ if __name__ == '__main__':
             main(d)
             if settings_dict['cln'].lower() == 'y':
                 clear()
+            if settings_dict['rec'] == 'y':
+                create_img(table, str(current_generation))
             while True:
 
                 last_table = table
@@ -398,10 +411,14 @@ if __name__ == '__main__':
 
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
                 start = time()
 
@@ -420,8 +437,11 @@ if __name__ == '__main__':
                 if settings_dict['cln'].lower() == 'y':
                     clear()
 
+                if settings_dict['rec'] == 'y':
+                    create_img(table, str(current_generation))
+
         elif settings_dict['mode'].lower() == 'input':
-            print('Enter, separated by a space, the coordinates of those cells that must be filled (1;1 10;5 7;3)')
+            print('Enter, separated by a space, the coordinates of those cells that must be filled, example - 1;1 10;5 7;3')
             print(coord_table)
 
             pre_table = input('>>> ').split()
@@ -431,6 +451,8 @@ if __name__ == '__main__':
             main(d)
             if settings_dict['cln'].lower() == 'y':
                 clear()
+            if settings_dict['rec'] == 'y':
+                create_img(table, str(current_generation))
             while True:
 
                 last_table = table
@@ -446,10 +468,14 @@ if __name__ == '__main__':
 
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
                 start = time()
 
@@ -467,6 +493,8 @@ if __name__ == '__main__':
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
+                if settings_dict['rec'] == 'y':
+                    create_img(table, str(current_generation))
 
         else:
             generate_initial_table(40)
@@ -474,6 +502,8 @@ if __name__ == '__main__':
             main(d)
             if settings_dict['cln'].lower() == 'y':
                 clear()
+            if settings_dict['rec'] == 'y':
+                create_img(table, str(current_generation))
             while True:
 
                 last_table = table
@@ -488,10 +518,14 @@ if __name__ == '__main__':
 
                 if table_inf().get('alive_cells') == 0:
                     exit_code = 0
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
 
                 if last_table == table:
                     exit_code = '∞'
+                    if settings_dict['rec'] == 'y':
+                        create_img(table, str(current_generation))
                     break
                 start = time()
 
@@ -509,7 +543,20 @@ if __name__ == '__main__':
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
+                if settings_dict['rec'] == 'y':
+                    create_img(table, str(current_generation))
+
 
 print(exit_code_dict[exit_code])
 
-input('e>n>d>')
+
+print(exit_code_dict[exit_code],'\n')
+try:
+    if settings_dict['rec'] == 'y':
+        fps = int(input('Enter the frame rate for the video: '))
+        create_video(fps=fps)
+        delete_images()
+except:
+    pass
+sleep(0.5)
+input('>>>')
