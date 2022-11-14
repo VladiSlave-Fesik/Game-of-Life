@@ -51,7 +51,6 @@ num_y = 10
 
 glider = ['6;3', '6;4', '6;5', '5;5', '4;4']
 
-
 exit_code = None
 exit_code_dict = {0: 'The game is stopped due to the fact that the number of live cells = 0',
                   '∞': 'Game paused because the table has not changed from the previous generation',
