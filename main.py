@@ -5,6 +5,9 @@ from record import *
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
 
+end_1 ='Everything ends . Sooner or later.'
+end_2 ='Everything begins and ends.'
+
 sq_n1 = '□'
 sq_f1 = '■'
 sq_n2 = '░░'
@@ -47,6 +50,7 @@ num_x = 10
 num_y = 10
 
 glider = ['6;3', '6;4', '6;5', '5;5', '4;4']
+
 
 exit_code = None
 exit_code_dict = {0: 'The game is stopped due to the fact that the number of live cells = 0',
@@ -637,4 +641,5 @@ try:
 except:
     pass
 sleep(0.5)
-input('e>n>d>')
+print(fg.Figlet(font='slant', width=300).renderText(end_1))
+input('Press Enter to pay respects to dead cells...')
