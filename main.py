@@ -1,6 +1,12 @@
-from time import sleep, time
-import pyfiglet as fg
-from record import *
+try:
+    from time import sleep, time
+    import pyfiglet as fg
+    from record import *
+except ImportError as error:
+    print('Import error. It ended earlier than it should have...')
+    print(error)
+    input()
+
 
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
@@ -75,6 +81,7 @@ class Cell:
             self.stat = self.next_stat
             self.next_stat = None
         self.symb = sq_null if self.stat == 0 else sq_full
+
 
     def new_gen(self, d: dict):
         self.ls = []
@@ -282,8 +289,8 @@ def settings_menu():
     if mode.lower() == 'random':
         random_ch = int(input('Input a chance of alive cell: '))
 
-    tbs = input('''
-    Table per second | tbs  3 - standard
+    tps = input('''
+    Table per second | tps  3 - standard
     max - no limit
     0 - after each generation, input is expected
     your int
@@ -302,7 +309,7 @@ def settings_menu():
         height = int(input('Width of frame:'))
 
     settings_dict = {'sq_null': dead_cell, 'sq_full': alive_cell, 'line_sep': line_separator,
-                     'cell_sep': cell_separator, 'mode': mode, 'tbs': tbs, 'cln': clear_or_not, 'rec': rec}
+                     'cell_sep': cell_separator, 'mode': mode, 'tps': tps, 'cln': clear_or_not, 'rec': rec}
 
 
 if __name__ == '__main__':
@@ -318,6 +325,8 @@ if __name__ == '__main__':
         print()
 
     if ans.lower() == 'start':
+        gen_start = time()
+
         generate_initial_table(40)
         d = create_dict_num_cell()
         main(d)
@@ -334,7 +343,7 @@ if __name__ == '__main__':
             change_stats()
             main(d)
             try:
-                print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                print(f'tps:{round(1 / (time() - start), 2)}\n')
             except:
                 pass
             start = time()
@@ -355,6 +364,8 @@ if __name__ == '__main__':
             eng_end = time()
             sleep((1 / 3) - (eng_end - eng_start))
 
+        mean_tps = current_generation / (time()-gen_start)
+
 
     elif ans.lower() == 'settings':
         settings_menu()
@@ -370,6 +381,7 @@ if __name__ == '__main__':
         cell_sep = settings_dict['cell_sep'] if settings_dict['cell_sep'] else '  '
 
         if settings_dict['mode'].lower() == 'glider':
+            gen_start = time()
             generate_prepared_table(glider)
             d = create_dict_num_cell()
             main(d)
@@ -389,7 +401,7 @@ if __name__ == '__main__':
                 change_stats()
                 main(d)
                 try:
-                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                    print(f'tps:{round(1 / (time() - start), 2)}\n')
                 except:
                     pass
 
@@ -414,17 +426,17 @@ if __name__ == '__main__':
                     pass
 
                 start = time()
-                if len(settings_dict['tbs']) == 0:
+                if len(settings_dict['tps']) == 0:
                     sleep((1 / 3) - (start - eng_start))
 
-                elif settings_dict['tbs'].lower() == 'max':
+                elif settings_dict['tps'].lower() == 'max':
                     pass
 
-                elif settings_dict['tbs'] == '0':
+                elif settings_dict['tps'] == '0':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
+                    sleep((1 / int(settings_dict['tps'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
@@ -432,7 +444,10 @@ if __name__ == '__main__':
                 if settings_dict['rec'] == 'y':
                     resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
 
+            mean_tps = current_generation / (time() - gen_start)
+
         elif settings_dict['mode'].lower() == 'random':
+            gen_start = time()
             generate_initial_table(random_ch)
             d = create_dict_num_cell()
             main(d)
@@ -452,7 +467,7 @@ if __name__ == '__main__':
                 change_stats()
                 main(d)
                 try:
-                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                    print(f'tps:{round(1 / (time() - start), 2)}\n')
                 except:
                     pass
                 start = time()
@@ -478,31 +493,31 @@ if __name__ == '__main__':
                     pass
 
                 start = time()
-                if len(settings_dict['tbs']) == 0:
+                if len(settings_dict['tps']) == 0:
                     sleep((1 / 3, 5) - (start - eng_start))
 
-                elif settings_dict['tbs'].lower() == 'max':
+                elif settings_dict['tps'].lower() == 'max':
                     pass
 
-                elif settings_dict['tbs'] == '0':
+                elif settings_dict['tps'] == '0':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
+                    sleep((1 / int(settings_dict['tps'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
 
                 if settings_dict['rec'] == 'y':
                     resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
-
+            mean_tps = current_generation / (time() - gen_start)
         elif settings_dict['mode'].lower() == 'input':
             print(
                 'Enter, separated by a space, the coordinates of those cells that must be filled, example - 1;1 10;5 7;3')
             print(coord_table)
 
             pre_table = input('>>> ').split()
-
+            gen_start = time()
             generate_prepared_table(pre_table)
             d = create_dict_num_cell()
             main(d)
@@ -524,7 +539,7 @@ if __name__ == '__main__':
                 main(d)
 
                 try:
-                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                    print(f'tps:{round(1 / (time() - start), 2)}\n')
                 except:
                     pass
 
@@ -549,24 +564,26 @@ if __name__ == '__main__':
                     pass
                 start = time()
 
-                if len(settings_dict['tbs']) == 0:
+                if len(settings_dict['tps']) == 0:
                     sleep((1 / 3) - (start - eng_start))
 
-                elif settings_dict['tbs'].lower() == 'max':
+                elif settings_dict['tps'].lower() == 'max':
                     pass
 
-                elif settings_dict['tbs'] == '0':
+                elif settings_dict['tps'] == '0':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
+                    sleep((1 / int(settings_dict['tps'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
                 if settings_dict['rec'] == 'y':
                     resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
 
+
         else:
+            gen_start = time()
             generate_initial_table(40)
             d = create_dict_num_cell()
             main(d)
@@ -586,7 +603,7 @@ if __name__ == '__main__':
                 change_stats()
                 main(d)
                 try:
-                    print(f'tbs:{round(1 / (time() - start), 2)}\n')
+                    print(f'tps:{round(1 / (time() - start), 2)}\n')
                 except:
                     pass
 
@@ -611,24 +628,26 @@ if __name__ == '__main__':
                     pass
                 start = time()
 
-                if len(settings_dict['tbs']) == 0:
+                if len(settings_dict['tps']) == 0:
                     sleep((1 / 3) - (start - eng_start))
 
-                elif settings_dict['tbs'].lower() == 'max':
+                elif settings_dict['tps'].lower() == 'max':
                     pass
 
-                elif settings_dict['tbs'] == '0':
+                elif settings_dict['tps'] == '0':
                     input('enter >>> ')
 
                 else:
-                    sleep((1 / int(settings_dict['tbs'])) - (start - eng_start))
+                    sleep((1 / int(settings_dict['tps'])) - (start - eng_start))
 
                 if settings_dict['cln'].lower() == 'y':
                     clear()
                 if settings_dict['rec'] == 'y':
                     resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
+            mean_tps = current_generation / (time() - gen_start)
 
 print(exit_code_dict[exit_code], '\n')
+print(f'Mean tps: {round(mean_tps,2)}')
 try:
     if settings_dict['rec'] == 'y':
         fps = int(input('Enter the frame rate for the video: '))
@@ -641,4 +660,5 @@ except:
     pass
 sleep(0.5)
 print(fg.Figlet(font='slant', width=300).renderText(end_1))
+
 input('Press Enter to pay respects to dead cells...')
