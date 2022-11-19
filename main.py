@@ -1,5 +1,6 @@
 try:
     from time import sleep, time
+    from colorit import background, init_colorit,color
     import pyfiglet as fg
     from record import *
 except ImportError as error:
@@ -7,6 +8,14 @@ except ImportError as error:
     print(error)
     input()
 
+
+init_colorit()
+
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+col1 = white
+col2 = black
 
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
@@ -189,12 +198,14 @@ def generate_prepared_table(pre):
 
 
 def update_table():
+    global col1,col2
+
     i = 0
     string = ''''''
     for y in range(1, num_y + 1):
         for x in range(1, num_x + 1):
             cell = cell_list[i]
-            string += cell.__str__() + cell_sep
+            string += background(color(cell.__str__() + cell_sep,col1), col2)
             i += 1
         string += line_sep
     return string
@@ -240,6 +251,7 @@ def settings_menu():
     global random_ch
     global num_x, num_y
     global width,height
+    global col1,col2
 
     print(
         'Input the settings, you can also skip to not change or copy and input an already preset\nFor correct recording, do not change: cell signs, cell separator, line separator')
@@ -299,6 +311,15 @@ def settings_menu():
     clear_or_not = input('''
     Whether to clear the console from the table? [y/n]
     >>> ''')
+
+    col1_ = input('Input color of cell | 255,255,255 - standard\n>>> ')
+    col2_ = input('Input color of background | 0,0,0 - standard\n>>> ')
+
+    if len(col1_):
+        col1 = tuple(col1_.split(','))
+
+    if len(col2_):
+        col2 = tuple(col2_.split(','))
 
     rec = input('''
     Record game? [y/n]
