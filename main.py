@@ -306,7 +306,7 @@ def settings_menu():
 
     if rec == 'y':
         width = int(input('Width of frame:'))
-        height = int(input('Width of frame:'))
+        height = int(input('Height of frame:'))
 
     settings_dict = {'sq_null': dead_cell, 'sq_full': alive_cell, 'line_sep': line_separator,
                      'cell_sep': cell_separator, 'mode': mode, 'tps': tps, 'cln': clear_or_not, 'rec': rec}
