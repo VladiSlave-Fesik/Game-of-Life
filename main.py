@@ -8,15 +8,6 @@ except ImportError as error:
     print(error)
     input()
 
-
-init_colorit()
-
-white = (255, 255, 255)
-black = (0, 0, 0)
-
-col1 = white
-col2 = black
-
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
 
@@ -205,7 +196,7 @@ def update_table():
     for y in range(1, num_y + 1):
         for x in range(1, num_x + 1):
             cell = cell_list[i]
-            string += background(color(cell.__str__() + cell_sep,col1), col2)
+            string += cell.__str__() + cell_sep
             i += 1
         string += line_sep
     return string
@@ -311,15 +302,6 @@ def settings_menu():
     clear_or_not = input('''
     Whether to clear the console from the table? [y/n]
     >>> ''')
-
-    col1_ = input('Input color of cell | 255,255,255 - standard\n>>> ')
-    col2_ = input('Input color of background | 0,0,0 - standard\n>>> ')
-
-    if len(col1_):
-        col1 = tuple(col1_.split(','))
-
-    if len(col2_):
-        col2 = tuple(col2_.split(','))
 
     rec = input('''
     Record game? [y/n]
