@@ -236,6 +236,66 @@ def main(d):
     print_inf()
     current_generation += 1
 
+def life():
+    global table,last_table,exit_code,mean_tps
+
+    while True:
+        eng_start = time()
+        try:
+            second_table = last_table
+        except:
+            pass
+        last_table = table
+
+        new_gen(d)
+        change_stats()
+        main(d)
+        try:
+            print(f'tps:{round(1 / (time() - start), 2)}\n')
+        except:
+            pass
+
+        if table_inf().get('alive_cells') == 0:
+            exit_code = 0
+            if settings_dict['rec'] == 'y':
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
+            break
+
+        if last_table == table:
+            exit_code = '∞'
+            if settings_dict['rec'] == 'y':
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
+            break
+        try:
+            if second_table == table:
+                exit_code = 'loop'
+                if settings_dict['rec'] == 'y':
+                    resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width,
+                                 height=height)
+                break
+        except:
+            pass
+
+        start = time()
+        if len(settings_dict['tps']) == 0:
+            sleep((1 / 3) - (start - eng_start))
+
+        elif settings_dict['tps'].lower() == 'max':
+            pass
+
+        elif settings_dict['tps'] == '0':
+            input('enter >>> ')
+
+        else:
+            sleep((1 / int(settings_dict['tps'])) - (start - eng_start))
+
+        if settings_dict['cln'].lower() == 'y':
+            clear()
+
+        if settings_dict['rec'] == 'y':
+            resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
+
+    mean_tps = current_generation / (time() - gen_start)
 
 def settings_menu():
     global settings_dict
