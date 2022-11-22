@@ -3,6 +3,7 @@ try:
     import pyfiglet as fg
     from record import *
     import os
+
 except ImportError as error:
     print('Import error. It ended earlier than it should have...')
     print(error)
@@ -11,8 +12,8 @@ except ImportError as error:
 # sq_n = 0 | null | dead
 # sq_f = 1 | full | alive
 
-end_1 ='Everything ends . Sooner or later.'
-end_2 ='Everything begins and ends.'
+end_1 = 'Everything ends . Sooner or later.'
+end_2 = 'Everything begins and ends.'
 
 sq_n1 = '□'
 sq_f1 = '■'
@@ -81,7 +82,6 @@ class Cell:
             self.stat = self.next_stat
             self.next_stat = None
         self.symb = sq_null if self.stat == 0 else sq_full
-
 
     def new_gen(self, d: dict):
         self.ls = []
@@ -189,7 +189,7 @@ def generate_prepared_table(pre):
 
 
 def update_table():
-    global col1,col2
+    global col1, col2
 
     i = 0
     string = ''''''
@@ -236,8 +236,9 @@ def main(d):
     print_inf()
     current_generation += 1
 
+
 def life():
-    global table,last_table,exit_code,mean_tps
+    global table, last_table, exit_code, mean_tps
 
     while True:
         try:
@@ -297,12 +298,13 @@ def life():
 
     mean_tps = current_generation / (time() - gen_start)
 
+
 def settings_menu():
     global settings_dict
     global random_ch
     global num_x, num_y
-    global width,height
-    global col1,col2
+    global width, height
+    global col1, col2
 
     print(
         'Input the settings, you can also skip to not change or copy and input an already preset\nFor correct recording, do not change: cell signs, cell separator, line separator')
@@ -433,7 +435,7 @@ if __name__ == '__main__':
             eng_end = time()
             sleep((1 / 3) - (eng_end - eng_start))
 
-        mean_tps = current_generation / (time()-gen_start)
+        mean_tps = current_generation / (time() - gen_start)
 
 
     elif ans.lower() == 'settings':
@@ -457,7 +459,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
 
             life()
 
@@ -469,7 +471,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
 
             life()
 
@@ -486,7 +488,7 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
 
             life()
 
@@ -498,13 +500,12 @@ if __name__ == '__main__':
             if settings_dict['cln'].lower() == 'y':
                 clear()
             if settings_dict['rec'] == 'y':
-                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation),width=width,height=height)
+                resize_image(create_img(table, x=num_x, y=num_y), str(current_generation), width=width, height=height)
 
             life()
 
-
 print(exit_code_dict[exit_code], '\n')
-print(f'Mean tps: {round(mean_tps,2)}')
+print(f'Mean tps: {round(mean_tps, 2)}')
 try:
     if settings_dict['rec'] == 'y':
         fps = int(input('Enter the frame rate for the video: '))
