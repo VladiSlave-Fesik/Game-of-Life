@@ -240,7 +240,6 @@ def life():
     global table,last_table,exit_code,mean_tps
 
     while True:
-        eng_start = time()
         try:
             second_table = last_table
         except:
@@ -277,8 +276,9 @@ def life():
             pass
 
         start = time()
+
         if len(settings_dict['tps']) == 0:
-            sleep((1 / 3) - (start - eng_start))
+            sleep((1 / 3))
 
         elif settings_dict['tps'].lower() == 'max':
             pass
@@ -287,7 +287,7 @@ def life():
             input('enter >>> ')
 
         else:
-            sleep((1 / int(settings_dict['tps'])) - (start - eng_start))
+            sleep((1 / int(settings_dict['tps'])))
 
         if settings_dict['cln'].lower() == 'y':
             clear()
