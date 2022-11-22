@@ -1,6 +1,6 @@
 # Byte-compiled / optimized / DLL files
-movie/*.mp4
-frames/*.png
+*.mp4
+*.png
 test.py
 __pycache__/
 *.py[cod]
