@@ -1,6 +1,5 @@
 try:
     from time import sleep, time
-    from colorit import background, init_colorit,color
     import pyfiglet as fg
     from record import *
 except ImportError as error:
