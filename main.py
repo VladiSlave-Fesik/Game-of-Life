@@ -377,10 +377,10 @@ def settings_menu():
 
 if __name__ == '__main__':
 
-    if 'frames' not in os.getcwd():
+    if 'frames' not in os.listdir(os.getcwd()):
         os.mkdir('frames')
 
-    if 'movie' not in os.getcwd():
+    if 'movie' not in os.listdir(os.getcwd()):
         os.mkdir('movie')
 
     print(fg.Figlet(font='slant', width=300).renderText('Game of Life'))
