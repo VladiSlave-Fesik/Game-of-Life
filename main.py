@@ -2,6 +2,7 @@ try:
     from time import sleep, time
     import pyfiglet as fg
     from record import *
+    import os
 except ImportError as error:
     print('Import error. It ended earlier than it should have...')
     print(error)
@@ -375,6 +376,12 @@ def settings_menu():
 
 
 if __name__ == '__main__':
+
+    if 'frames' not in os.getcwd():
+        os.mkdir('frames')
+
+    if 'movie' not in os.getcwd():
+        os.mkdir('movie')
 
     print(fg.Figlet(font='slant', width=300).renderText('Game of Life'))
     ans = input('''
