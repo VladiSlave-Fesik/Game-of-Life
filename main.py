@@ -3,6 +3,8 @@ try:
     import pyfiglet as fg
     from record import *
     import os
+    import clr
+    clr.AddReference(os.getcwd()+'\\next_gen.dll')
 
 except ImportError as error:
     print('Import error. It ended earlier than it should have...')
