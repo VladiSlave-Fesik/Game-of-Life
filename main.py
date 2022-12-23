@@ -3,8 +3,10 @@ try:
     import pyfiglet as fg
     from record import *
     import os
+
     import clr
     clr.AddReference(os.getcwd()+'\\next_gen.dll')
+    import
 
 except ImportError as error:
     print('Import error. It ended earlier than it should have...')
@@ -25,12 +27,13 @@ sq_n3 = ' 0'
 sq_f3 = ' 1'
 sq_n4 = '[□]'
 sq_f4 = '[■]'
+
 sq_null = sq_n2
 sq_full = sq_f2
 
 line_sep1 = '\n'
 line_sep2 = '\n\n'
-line_sep = line_sep2
+line_sep = line_sep1
 
 cell_sep1 = ' '
 cell_sep2 = '  '
@@ -68,100 +71,6 @@ exit_code_dict = {0: 'The game is stopped due to the fact that the number of liv
 settings_dict = {}
 
 
-class Cell:
-
-    def __init__(self, position='1;1', status=0):
-        self.stat = status
-        self.pos = position
-        self.symb = sq_null if self.stat == 0 else sq_full
-        self.next_stat = None
-
-    def __str__(self):
-        return self.symb
-
-    def change_stat(self):
-        if self.next_stat is not None:
-            self.stat = self.next_stat
-            self.next_stat = None
-        self.symb = sq_null if self.stat == 0 else sq_full
-
-    def new_gen(self, d: dict):
-        self.ls = []
-        self.n_pos = self.pos.split(';')
-        self.n_pos = list(map(int, self.n_pos))
-        try:
-            self.up = 'up' if d.get(f'{self.n_pos[0]};{self.n_pos[1] - 1}').stat == 1 else False
-            if self.up is not False:
-                self.ls.append(self.up)
-        except:
-            pass
-        try:
-            self.down = 'down' if d.get(f'{self.n_pos[0]};{self.n_pos[1] + 1}').stat == 1 else False
-            if self.down is not False:
-                self.ls.append(self.down)
-        except:
-            pass
-        try:
-            self.left = 'left' if d.get(f'{self.n_pos[0] - 1};{self.n_pos[1]}').stat == 1 else False
-            if self.left is not False:
-                self.ls.append(self.left)
-        except:
-            pass
-        try:
-            self.right = 'right' if d.get(f'{self.n_pos[0] + 1};{self.n_pos[1]}').stat == 1 else False
-            if self.right is not False:
-                self.ls.append(self.right)
-        except:
-            pass
-        try:
-            self.up_left = 'up_left' if d.get(f'{self.n_pos[0] - 1};{self.n_pos[1] - 1}').stat == 1 else False
-            if self.up_left is not False:
-                self.ls.append(self.up_left)
-        except:
-            pass
-        try:
-            self.down_left = 'down_left' if d.get(f'{self.n_pos[0] - 1};{self.n_pos[1] + 1}').stat == 1 else False
-            if self.down_left is not False:
-                self.ls.append(self.down_left)
-        except:
-            pass
-        try:
-            self.up_right = 'up_right' if d.get(f'{self.n_pos[0] + 1};{self.n_pos[1] - 1}').stat == 1 else False
-            if self.up_right is not False:
-                self.ls.append(self.up_right)
-        except:
-            pass
-        try:
-            self.down_right = 'down_right' if d.get(f'{self.n_pos[0] + 1};{self.n_pos[1] + 1}').stat == 1 else False
-            if self.down_right is not False:
-                self.ls.append(self.down_right)
-        except:
-            pass
-
-
-        finally:
-
-            if self.stat == 0 and len(self.ls) == 3:
-                self.next_stat = 1
-
-            elif self.stat == 1:
-                if len(self.ls) in (2, 3):
-                    self.next_stat = 1
-
-                elif len(self.ls) > 3 or len(self.ls) < 2:
-                    self.next_stat = 0
-
-
-def new_gen(d):
-    for cell in cell_list:
-        cell.new_gen(d)
-
-
-def change_stats():
-    for cell in cell_list:
-        cell.change_stat()
-
-
 def generate_status(percent: int):
     '''The percentage argument means the chance that the cell will be 'alive' '''
 
@@ -169,47 +78,30 @@ def generate_status(percent: int):
     return st
 
 
-def generate_initial_table(percent_of_alive: int):
+def generate_initial_table(percent_of_alive: int, x=num_x , y=num_y):
     global cell_list
+
     cell_list = []
-    for y in range(1, num_y + 1):
-        for x in range(1, num_x + 1):
-            cell = Cell(position=f'{x};{y}', status=generate_status(percent_of_alive))
-            cell_list.append(cell)
+    for i in range(x*y):
+        status = generate_status()
+        cell_list.append(status)
 
 
 def generate_prepared_table(pre):
     global cell_list
+
     cell_list = []
     for y in range(1, num_y + 1):
         for x in range(1, num_x + 1):
             if f'{x};{y}' in pre:
-                cell = Cell(position=f'{x};{y}', status=1)
+                cell = 1
             else:
-                cell = Cell(position=f'{x};{y}', status=0)
+                cell = 0
             cell_list.append(cell)
 
 
-def update_table():
-    global col1, col2
-
-    i = 0
-    string = ''''''
-    for y in range(1, num_y + 1):
-        for x in range(1, num_x + 1):
-            cell = cell_list[i]
-            string += cell.__str__() + cell_sep
-            i += 1
-        string += line_sep
-    return string
-
-
 def table_inf():
-    l = []
-    for i in cell_list:
-        l.append(i.stat)
-
-    alive_cells = sum(l)
+    alive_cells = sum(cell_list)
     dead_cells = num_x * num_y - alive_cells
     inf_dict = {'alive_cells': alive_cells, 'dead_cells': dead_cells, 'current_generation': current_generation}
 
@@ -221,20 +113,32 @@ def print_inf():
         print(f'{i} - {table_inf().get(i)}')
 
 
-def create_dict_num_cell():
-    d = {}
+def print_table():
+    global cell_list
+    global num_x,num_y
+
     i = 0
-    for y in range(1, num_y + 1):
-        for x in range(1, num_x + 1):
-            d[f'{x};{y}'] = cell_list[i]
+    for y in range(num_y):
+        for x in range(num_x):
+            if cell_list[i]:
+                print(sq_full,end=cell_sep)
+            else:
+                print(sq_null, end=cell_sep)
             i += 1
-    return d
+        print(line_sep)
+
+
+def next_generation():
+    global cell_list
+
+
 
 
 def main(d):
     global current_generation
     global table
-    print(table := update_table())
+
+    print_table()
     print_inf()
     current_generation += 1
 
@@ -516,19 +420,19 @@ if __name__ == '__main__':
 
             life()
 
-print(exit_code_dict[exit_code], '\n')
-print(f'Mean tps: {round(mean_tps, 2)}')
-try:
-    if settings_dict['rec'] == 'y':
-        fps = int(input('Enter the frame rate for the video: '))
-        create_video(fps=fps)
-        from record import name
+    print(exit_code_dict[exit_code], '\n')
+    print(f'Mean tps: {round(mean_tps, 2)}')
+    try:
+        if settings_dict['rec'] == 'y':
+            fps = int(input('Enter the frame rate for the video: '))
+            create_video(fps=fps)
+            from record import name
 
-        print(f'Name of record - {name}.mp4')
-        delete_images()
-except:
-    pass
-sleep(0.5)
-print(fg.Figlet(font='slant', width=300).renderText(end_1))
+            print(f'Name of record - {name}.mp4')
+            delete_images()
+    except:
+        pass
+    sleep(0.5)
+    print(fg.Figlet(font='slant', width=300).renderText(end_1))
 
-input('Press Enter to pay respects to dead cells...')
+    input('Press Enter to pay respects to dead cells...')
